@@ -7,6 +7,7 @@
 #   GHCR_NAMESPACE   Destination namespace      (default: ghcr.io/openprojectx)
 #   IMAGES_FILE      Path to the image list     (default: images.yaml)
 #   DRY_RUN          If "true", print actions instead of running skopeo
+#   FORCE            If "true", re-copy even when the destination is up to date
 #   GHCR_USERNAME    Username for skopeo login  (optional; login skipped if unset)
 #   GHCR_TOKEN       Token/password for login   (optional; login skipped if unset)
 #
@@ -96,7 +97,19 @@ count="$(yq '.images | length' "$IMAGES_FILE")"
 [[ "$count" =~ ^[0-9]+$ && "$count" -gt 0 ]] || die "no images found in $IMAGES_FILE"
 log "Found $count image(s) to mirror into $GHCR_NAMESPACE"
 
+# Return success when the destination already holds the exact same manifest
+# as the source, so the image can be skipped (a cross-run "pull cache"). Set
+# FORCE=true to always re-copy. The raw manifests are compared byte-for-byte,
+# which works for both single images and multi-arch manifest lists.
+already_mirrored() {
+  local source="$1" dest="$2" src_raw dst_raw
+  dst_raw="$(skopeo inspect --raw "docker://$dest" 2>/dev/null)" || return 1
+  src_raw="$(skopeo inspect --raw "docker://$source" 2>/dev/null)" || return 1
+  [[ -n "$src_raw" && "$src_raw" == "$dst_raw" ]]
+}
+
 failures=0
+skipped=0
 for i in $(seq 0 $((count - 1))); do
   source="$(yq -r ".images[$i].source" "$IMAGES_FILE")"
   target="$(yq -r ".images[$i].target // \"\"" "$IMAGES_FILE")"
@@ -116,6 +129,12 @@ for i in $(seq 0 $((count - 1))); do
     continue
   fi
 
+  if [[ "${FORCE:-false}" != "true" ]] && already_mirrored "$source" "$dest"; then
+    echo "    cache hit: destination already up to date, skipping"
+    skipped=$((skipped + 1))
+    continue
+  fi
+
   if ! skopeo copy "${copy_args[@]}" "docker://$source" "docker://$dest"; then
     warn "failed to copy $source"
     failures=$((failures + 1))
@@ -123,6 +142,6 @@ for i in $(seq 0 $((count - 1))); do
 done
 
 if [[ "$failures" -gt 0 ]]; then
-  die "$failures image(s) failed to sync"
+  die "$failures image(s) failed to sync ($skipped cached, $((count - failures - skipped)) copied)"
 fi
-log "All images synced successfully"
+log "All images synced successfully ($skipped cached, $((count - skipped)) copied)"

@@ -8,6 +8,10 @@ on:
         description: "Print actions without pushing"
         type: boolean
         default: false
+      force:
+        description: "Re-copy even if the destination is already up to date"
+        type: boolean
+        default: false
   # Re-sync whenever the image list changes.
   push:
     branches: [main]
@@ -45,4 +49,5 @@ jobs:
           GHCR_USERNAME: ${{ github.actor }}
           GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DRY_RUN: ${{ inputs.dry_run || 'false' }}
+          FORCE: ${{ inputs.force || 'false' }}
         run: bash scripts/sync.sh

@@ -55,6 +55,18 @@ images:
 
 Commit to `main` and the workflow re-syncs automatically.
 
+## Caching across runs
+
+Before copying, the script compares the raw manifest of the source against the
+one already in GHCR. If they're identical the image is **skipped** — so a
+scheduled run only transfers tags that actually changed upstream, and unchanged
+tags cost a single cheap manifest lookup. (skopeo also never re-uploads layers
+that already exist at the destination, so even changed images reuse shared
+layers.)
+
+Set `FORCE=true` (or tick **force** on the manual run) to re-copy everything
+regardless.
+
 ## Running locally
 
 Requires `skopeo` and `yq` (v4, mikefarah).
