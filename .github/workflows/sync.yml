@@ -1,0 +1,48 @@
+name: Sync images to GHCR
+
+on:
+  # Manual trigger, with an optional dry run.
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Print actions without pushing"
+        type: boolean
+        default: false
+  # Re-sync whenever the image list changes.
+  push:
+    branches: [main]
+    paths:
+      - images.yaml
+      - scripts/sync.sh
+      - .github/workflows/sync.yml
+  # Keep mirrored tags fresh (daily at 03:00 UTC).
+  schedule:
+    - cron: "0 3 * * *"
+
+# Allow only one sync at a time; let an in-progress run finish.
+concurrency:
+  group: sync-images
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install skopeo
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y skopeo
+
+      - name: Sync images
+        env:
+          GHCR_NAMESPACE: ghcr.io/openprojectx
+          GHCR_USERNAME: ${{ github.actor }}
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DRY_RUN: ${{ inputs.dry_run || 'false' }}
+        run: bash scripts/sync.sh

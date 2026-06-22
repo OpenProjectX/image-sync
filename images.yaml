@@ -1,0 +1,28 @@
+# Images to mirror into ghcr.io/openprojectx
+#
+# Each entry copies an image from a public registry into GHCR. The source
+# registry is encoded as a leading namespace so that images with the same
+# name from different registries never collide.
+#
+#   source: full reference of the upstream image (registry/repo:tag)
+#   target: (optional) repo[:tag] under ghcr.io/openprojectx. Omit it to use
+#           the default naming convention (recommended):
+#               <registry-alias>/<upstream/repo/path>:<tag>
+#   all:    (optional, default true) copy every architecture in the
+#           manifest list instead of just the runner's platform.
+#
+# Registry aliases: docker.io -> dockerhub, registry.k8s.io -> k8s,
+# quay.io -> quay, gcr.io -> gcr, ghcr.io -> ghcr, mcr.microsoft.com -> mcr,
+# public.ecr.aws -> ecr. Unknown hosts use the host name verbatim.
+#
+# Default-naming examples:
+#   docker.io/library/nginx:1.27 -> ghcr.io/openprojectx/dockerhub/library/nginx:1.27
+#   registry.k8s.io/pause:3.10   -> ghcr.io/openprojectx/k8s/pause:3.10
+#   quay.io/skopeo/stable:latest -> ghcr.io/openprojectx/quay/skopeo/stable:latest
+
+images:
+#  - source: docker.io/library/alpine:3.20
+#  - source: docker.io/library/busybox:1.36
+#  - source: registry.k8s.io/pause:3.10
+#  - source: quay.io/skopeo/stable:latest
+  - source: localstack/localstack:4
