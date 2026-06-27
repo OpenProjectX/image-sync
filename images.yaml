@@ -26,3 +26,5 @@ images:
 #  - source: registry.k8s.io/pause:3.10
 #  - source: quay.io/skopeo/stable:latest
   - source: localstack/localstack:4
+  - source: floci/floci:latest
+  - source: floci/floci-gcp:latest
