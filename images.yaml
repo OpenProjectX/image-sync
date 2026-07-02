@@ -28,3 +28,4 @@ images:
   - source: localstack/localstack:4
   - source: floci/floci:latest
   - source: floci/floci-gcp:latest
+  - source: elasticsearch:8.19.18
