@@ -30,4 +30,6 @@ images:
   - source: floci/floci-gcp:latest
   - source: elasticsearch:8.19.18
   - source: mariadb:10.6.27-jammy
+  - source: postgres:18.4-trixie
+
 
