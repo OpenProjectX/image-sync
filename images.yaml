@@ -34,5 +34,5 @@ images:
   - source: rustfs/rustfs:1.0.0-beta.8
   - source: rancher/k3s:v1.34.9-k3s1
   - source: rust:1.97.0-trixie
-
+  - source: debian:trixie-slim
 
