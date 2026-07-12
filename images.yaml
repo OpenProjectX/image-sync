@@ -28,6 +28,8 @@ images:
   - source: localstack/localstack:4
   - source: floci/floci:latest
   - source: floci/floci-gcp:latest
+  - source: floci/floci:1.5.32
+  - source: floci-gcp:0.5.0
   - source: elasticsearch:8.19.18
   - source: mariadb:10.6.27-jammy
   - source: postgres:18.4-trixie
