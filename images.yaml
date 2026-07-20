@@ -40,3 +40,5 @@ images:
   - source: maven:3.9.16-eclipse-temurin-17
   - source: alpine:3.23
   - source: wiremock/wiremock:3.13.2
+  - source: apache/hadoop:3.4.2
+  - source: apache/hadoop:3.5.0
