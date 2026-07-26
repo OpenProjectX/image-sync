@@ -42,3 +42,4 @@ images:
   - source: wiremock/wiremock:3.13.2
   - source: apache/hadoop:3.4.2
   - source: apache/hadoop:3.5.0
+  - source: mcr.microsoft.com/playwright:v1.61.1-noble
