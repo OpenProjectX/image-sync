@@ -32,7 +32,9 @@ images:
   - source: floci/floci:1.5.32
   - source: elasticsearch:8.19.18
   - source: mariadb:10.6.27-jammy
+  - source: mysql:8.0.44-bookworm
   - source: postgres:18.4-trixie
+  - source: postgres:16-alpine
   - source: rustfs/rustfs:1.0.0-beta.8
   - source: rancher/k3s:v1.34.9-k3s1
   - source: rust:1.97.0-trixie
@@ -43,3 +45,4 @@ images:
   - source: apache/hadoop:3.4.2
   - source: apache/hadoop:3.5.0
   - source: mcr.microsoft.com/playwright:v1.61.1-noble
+  - source: apache/kafka:4.1.2
