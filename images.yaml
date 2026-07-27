@@ -46,3 +46,5 @@ images:
   - source: apache/hadoop:3.5.0
   - source: mcr.microsoft.com/playwright:v1.61.1-noble
   - source: apache/kafka:4.1.2
+  - source: confluentinc/cp-schema-registry:7.8.0
+  - source: haproxy:3.0-alpine
